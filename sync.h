@@ -10,7 +10,7 @@ struct node
 struct sthread_sem_struct 
 {
 	int count;
-	int guard;
+	unsigned long guard;
 	struct node* node;
 };
 
