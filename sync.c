@@ -1,29 +1,35 @@
-/*
- * NAME, etc.
- *
- * sync.c
- *
- * Synchronization routines for SThread
- */
-
 #define _REENTRANT
-
 #include "sthread.h"
+#include <stddef.h>
+#include <stdlib.h>
+#include <stdio.h>
 
-
-/*
- * semaphore routines
- */
 int sthread_sem_init(sthread_sem_t *sem, int count)
 {
-	/* FILL ME IN! */
-        return -1;
+	if (count <= 0)
+		return -1;
+	sem -> count = count;
+	sem -> guard = 0;
+	sem -> node = (struct node*) malloc(sizeof(struct node));
+	if (sem -> node == NULL)
+		return -1;
+	sem -> node -> thread = NULL;
+	sem -> node -> next = NULL;
+    return 0;
 }
 
 int sthread_sem_destroy(sthread_sem_t *sem)
 {
-	/* FILL ME IN! */
-        return -1;
+	sem -> count = 0;
+	sem -> guard = 0;
+	while (sem -> node != NULL)
+	{
+		struct node* node_temp = sem -> node;
+		sem -> node = sem -> node -> next;
+		free(node_temp);
+		// printf("I am freeing node\n");
+	}
+	return 0;
 }
 
 int sthread_sem_down(sthread_sem_t *sem)

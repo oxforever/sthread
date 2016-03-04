@@ -5,6 +5,8 @@
 #include <unistd.h>
 #include "sthread.h"
 
+struct sthread_sem_struct sem;
+
 int threadmain(void *arg)
 {
 	int threadno = (int)arg;
@@ -25,6 +27,9 @@ int main(int argc, char *argv[])
 	if (sthread_init() == -1)
 		fprintf(stderr, "%s: sthread_init: %s\n", argv[0], strerror(errno));
 
+	if (sthread_sem_init(&sem, 1) == -1)
+		fprintf(stderr, "%s: sthread_sem_init: %s\n", argv[0], strerror(errno));
+
 	if (sthread_create(&thr1, threadmain, (void *)1) == -1)
 		fprintf(stderr, "%s: sthread_create: %s\n", argv[0], strerror(errno));
 
@@ -39,6 +44,9 @@ int main(int argc, char *argv[])
 	sthread_wake(thr1);
 	sthread_wake(thr2);
 	sleep(1);
+
+	if (sthread_sem_destroy(&sem) == -1)
+		fprintf(stderr, "%s: sthread_sem_destroy: %s\n", argv[0], strerror(errno));
 
 	return 0;
 }

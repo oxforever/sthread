@@ -1,15 +1,17 @@
-/*
- * sync.h
- */
-
 #ifndef _STHREAD_SYNC_H_
 #define _STHREAD_SYNC_H_
 
-/*
- * Semaphore structure
- */
-struct sthread_sem_struct {
-  /* FILL ME IN! */
+struct node
+{
+	sthread_t thread;
+	struct node *next;
+};
+
+struct sthread_sem_struct 
+{
+	int count;
+	int guard;
+	struct node* node;
 };
 
 typedef struct sthread_sem_struct sthread_sem_t;
