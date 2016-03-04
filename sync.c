@@ -60,8 +60,18 @@ int sthread_sem_down(sthread_sem_t *sem)
 
 int sthread_sem_try_down(sthread_sem_t *sem)
 {
+	int return_val = 0;
+	
+	while (test_and_set(&(sem->guard)))	/*Spin lock*/
+		sched_yield();	
+	
+	if (sem->count <= 0)
+	{
+		return_val = -1;
+	}
 
-    return -1;
+	sem->guard = 0;	/*Unlock*/
+    return return_val;
 }
 
 int sthread_sem_up(sthread_sem_t *sem)
